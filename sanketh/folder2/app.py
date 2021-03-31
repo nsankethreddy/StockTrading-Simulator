@@ -88,61 +88,6 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/sell', methods=['GET', 'POST'])
-def sell():
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    q1 = 'select bookings.bookingid,company.hid,company.hname ,company.hid ,company.hcost ,company.hcategory ,stocks.pid from bookings left join company on company.hid=bookings.pid left join stocks on company.hid=stocks.hid where bookings.cid = %s'
-    cursor.execute(q1, [session['id']])
-    bookings = cursor.fetchall()
-    done = dict()
-    msg = " "
-    i = 1
-    for items in bookings:
-        done[i] = items
-        i = i + 1
-    if request.method == 'POST':
-        bid = request.form['cancel']
-        print("BID", bid)
-        cursor.execute("SELECT pid from bookings where bookingid = %s", [bid])
-        pid = cursor.fetchone()
-        print(pid)
-        if pid != None:
-            cursor.execute(
-                'UPDATE stocks SET pavailability= stocks.pavailability+1 WHERE pid = %s', (pid['pid'],))
-            mysql.connection.commit()
-            cursor.execute('DELETE FROM bookings WHERE bookingid=%s', (bid,))
-            mysql.connection.commit()
-            msg = "Successfully sold"
-        else:
-            msg = "Some error occured, please try again"
-    return render_template('sell.html', msg=session['username'], bookings=done, mesg=msg)
-
-
-@app.route('/buy', methods=['GET', 'POST'])
-def book():
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    q1 = 'select stocks.pid,company.hid,company.hname,company.hcategory,company.hcost,stocks.pavailability from company left join stocks on company.hid=stocks.hid where stocks.pavailability>0;'
-    cursor.execute(q1)
-    pkg = cursor.fetchall()
-    msg = ""
-    available = dict()
-    book_id = ""
-    i = 1
-    for items in pkg:
-        available[i] = items
-        i = i + 1
-    if request.method == 'POST':
-        pid = request.form['book']
-        cursor.execute('INSERT INTO bookings VALUES (NULL,%s,%s)',(int(pid), int(session['id'])))
-        mysql.connection.commit()
-        q1 = 'SELECT bookingid FROM bookings WHERE pid= %s AND cid = %s ORDER BY bookingid DESC'
-        cursor.execute(q1, (pid, session['id']))
-        book_id = cursor.fetchone()
-        cursor.execute('UPDATE stocks SET pavailability= stocks.pavailability-1 WHERE pid=%s', (pid,))
-        mysql.connection.commit()
-    return render_template('buy.html', available=available, pk=book_id, msg=msg)
-
-
 @app.route('/profile')
 def profile():
     if 'loggedin' in session:
@@ -158,6 +103,61 @@ def home():
     if 'loggedin' in session:
         return render_template('home.html', username=session['username'])
     return redirect(url_for('login'))
+
+
+@app.route('/buy', methods=['GET', 'POST'])
+def book():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    q1 = 'select stock.sid, company.comid, company.comname, company.category, company.cost, stock.availability from company left join stock on company.comid=stock.comid where stock.availability > 0;'
+    cursor.execute(q1)
+    pkg = cursor.fetchall()
+    msg = ""
+    available = dict()
+    book_id = ""
+    i = 1
+    for items in pkg:
+        available[i] = items
+        i = i + 1
+    if request.method == 'POST':
+        sid = request.form['buy']
+        cursor.execute('INSERT INTO bookings VALUES (NULL,%s,%s)',(int(sid), int(session['id'])))
+        mysql.connection.commit()
+        q1 = 'SELECT bookingid FROM bookings WHERE sid= %s AND cid = %s ORDER BY bookingid DESC'
+        cursor.execute(q1, (sid, session['id']))
+        book_id = cursor.fetchone()
+        cursor.execute('UPDATE stock SET availability= stock.availability - 1 WHERE sid=%s', (sid,))
+        mysql.connection.commit()
+    return render_template('buy.html', available=available, pk=book_id, msg=msg)
+
+
+@app.route('/sell', methods=['GET', 'POST'])
+def sell():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    q1 = 'select bookings.bookingid, company.comid, company.comname, company.category, stock.sid, company.cost from bookings left join stock on bookings.sid=stock.sid left join company on stock.comid=company.comid where bookings.cid = %s'
+    cursor.execute(q1, [session['id']])
+    bookings = cursor.fetchall()
+    done = dict()
+    msg = " "
+    i = 1
+    for items in bookings:
+        done[i] = items
+        i = i + 1
+    if request.method == 'POST':
+        bid = request.form['sell']
+        print("BID", bid)
+        cursor.execute("SELECT sid from bookings where bookingid = %s", [bid])
+        sid = cursor.fetchone()
+        print(sid)
+        if sid != None:
+            cursor.execute(
+                'UPDATE stock SET availability = stock.availability + 1 WHERE sid = %s', (sid['sid'],))
+            mysql.connection.commit()
+            cursor.execute('DELETE FROM bookings WHERE bookingid = %s', (bid,))
+            mysql.connection.commit()
+            msg = "Successfully sold"
+        else:
+            msg = "Some error occured, please try again"
+    return render_template('sell.html', msg=session['username'], bookings=done, mesg=msg)
 
 
 if __name__ == "__main__":

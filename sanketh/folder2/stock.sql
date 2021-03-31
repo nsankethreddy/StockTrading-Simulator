@@ -18,17 +18,17 @@ CREATE TABLE IF NOT EXISTS logincheck(
 CREATE TABLE IF NOT EXISTS company(
     comid int(4) NOT NULL AUTO_INCREMENT,
     comname varchar(30) NOT NULL,
-    comcost BIGINT(10) NOT NULL,
-    comcategory varchar(30) NOT NULL,
-    PRIMARY KEY(hid)
+    cost BIGINT(10) NOT NULL,
+    category varchar(30) NOT NULL,
+    PRIMARY KEY(comid)
 );
 
-CREATE TABLE IF NOT EXISTS stocks(
+CREATE TABLE IF NOT EXISTS stock(
     sid int(4) NOT NULL AUTO_INCREMENT,
     comid int(4) NOT NULL,
     availability int NOT NULL,
-    PRIMARY KEY(pid),
-    FOREIGN KEY(hid) REFERENCES company(hid)
+    PRIMARY KEY(sid),
+    FOREIGN KEY(comid) REFERENCES company(comid)
 );
 
 CREATE TABLE IF NOT EXISTS bookings(
@@ -48,6 +48,6 @@ INSERT INTO company values(11," Google",8000,"Technology");
 INSERT INTO company values(21,"Tesla",7500,"Automobiles");
 INSERT INTO company values(31,"Microsoft",5000,"Technology");
 
-INSERT INTO stocks values(1, 1, 1);
-INSERT INTO stocks values(2, 2, 10);
-INSERT INTO stocks values(3, 3, 7);
+INSERT INTO stock values(4, 11, 1);
+INSERT INTO stock values(5, 21, 10);
+INSERT INTO stock values(6, 31, 7);
