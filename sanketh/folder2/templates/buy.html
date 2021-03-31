@@ -3,17 +3,20 @@
 {% block title %}Trade1{% endblock %}
 
 {% block content %}
-<h2>Bookings Page</h2>
+<h2>Buy Stocks Page</h2>
 <div>
     <p>Available stocks:</p>
     <form action="" method="POST">
         <table>
             <tr>
-                <td><b>Package</b></td>
-                <td><b>Details</b></td>
+                <td><b>#</b></td>
+                <td><b>ID</b></td>
+                <td><b>Company</b></td>
+                <td><b>Cost</b></td>
+                <td><b>Company type</b></td>
+                <td><b>Remaing Stocks</b></td>
             </tr>
             {% for key,value in available.items() %}
-
             <tr>
                 <td>{{ key }}</td>
                 {% for k,v in value.items() %}
@@ -22,9 +25,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><button type="submit" name="book" class="btn btn-outline-success"
-                        value=" {{ value['pid'] }}">Buy</button></td>
-
+                <td><button type="submit" name="book" class="btn btn-outline-success" value=" {{ value['pid'] }}">Buy</button></td>
                 {% endfor %}
 
             </tr>

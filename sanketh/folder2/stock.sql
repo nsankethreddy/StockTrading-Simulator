@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS logincheck(
     pwd varchar(50) NOT NULL,
     FOREIGN KEY(cid) REFERENCES customer(cid)
 );
-CREATE TABLE IF NOT EXISTS hotels(
+CREATE TABLE IF NOT EXISTS company(
     hid int(4) NOT NULL AUTO_INCREMENT,
     hname varchar(30) NOT NULL,
     hcost BIGINT(10) NOT NULL,
@@ -30,24 +30,9 @@ CREATE TABLE IF NOT EXISTS stocks(
     hcategory varchar(30) NOT NULL,
     pavailability int NOT NULL,
     PRIMARY KEY(pid),
-    FOREIGN KEY(hid) REFERENCES hotels(hid)
+    FOREIGN KEY(hid) REFERENCES company(hid)
 );
-    -- FOREIGN KEY(hcategory) REFERENCES hotels(hcategory)
 
-
-CREATE TABLE IF NOT EXISTS hotelpay(
-    hpid int(4) NOT NULL,
-    startdate DATE NOT NULL,
-    enddate DATE NOT NULL,
-    hid int(4) NOT NULL,
-    FOREIGN KEY(hid) REFERENCES hotels(hid)
-);
-CREATE TABLE IF NOT EXISTS transaction(
-    tpid int(4) NOT NULL,
-    transacdate DATE NOT NULL,
-    hid int(4) NOT NULL,
-    FOREIGN KEY(hid) REFERENCES hotels(hid)
-);
 CREATE TABLE IF NOT EXISTS bookings(
     bookingid int(4) NOT NULL AUTO_INCREMENT,
     pid int(4) NOT NULL,
@@ -59,9 +44,9 @@ CREATE TABLE IF NOT EXISTS bookings(
 
     INSERT INTO customer values(1,"skete",99,"99",'2000-08-26');
     INSERT INTO logincheck values(1,"99");
-    INSERT INTO hotels values(778," Google",8000,"Technology");
-    INSERT INTO hotels values(411,"Tesla",750,"Automobiles");
-    INSERT INTO hotels values(328,"Microsoft",5000,"Technology");
+    INSERT INTO company values(778," Google",8000,"Technology");
+    INSERT INTO company values(411,"Tesla",750,"Automobiles");
+    INSERT INTO company values(328,"Microsoft",5000,"Technology");
     INSERT INTO stocks values(327, 778, 8000, "Technology", 1);
     INSERT INTO stocks values(328, 778, 8000, "Technology", 10);
     INSERT INTO stocks values(389, 328, 44, "Technology", 7);
