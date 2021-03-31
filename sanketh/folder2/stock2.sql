@@ -79,8 +79,7 @@ CREATE TABLE IF NOT EXISTS bookings(
 /*Insert statements*/
 -- INSERT INTO customer values(123,"ash",99,"Blah blah blah",'2000-12-29');
 -- INSERT INTO customer values(112,"sky",99,"Gong",'2000-09-27');
--- INSERT INTO customer values(127,"skete",99,"Gg",'2000-08-26');
--- INSERT INTO logincheck values(123,"ash");
+
 -- INSERT INTO logincheck values(112,"sky");
 -- INSERT INTO logincheck values(127,"skete");
 INSERT INTO hotels values(778,"Vivanta by Taj",9902475577,"Bleh",5,8000,"luxury");

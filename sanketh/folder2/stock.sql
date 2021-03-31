@@ -1,6 +1,7 @@
 DROP database stock_simulator_db;
 CREATE DATABASE IF NOT EXISTS stock_simulator_db;
 USE stock_simulator_db;
+
 CREATE TABLE IF NOT EXISTS customer(
     cid int(4) NOT NULL AUTO_INCREMENT,
     cname varchar(30) NOT NULL,
@@ -56,6 +57,8 @@ CREATE TABLE IF NOT EXISTS bookings(
     FOREIGN KEY(cid) REFERENCES customer(cid)
 );
 
+    INSERT INTO customer values(1,"skete",99,"99",'2000-08-26');
+    INSERT INTO logincheck values(1,"99");
     INSERT INTO hotels values(778," Google",8000,"Technology");
     INSERT INTO hotels values(411,"Tesla",750,"Automobiles");
     INSERT INTO hotels values(328,"Microsoft",5000,"Technology");
