@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS bookings(
     bookingid int(4) NOT NULL AUTO_INCREMENT,
     pid int(4) NOT NULL,
     cid int(4) NOT NULL,
+    numbooking int NOT NULL,
     PRIMARY KEY(bookingid),
     FOREIGN KEY(pid) REFERENCES stocks(pid),
     FOREIGN KEY(cid) REFERENCES customer(cid)

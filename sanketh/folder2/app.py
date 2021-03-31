@@ -121,7 +121,7 @@ def sell():
 @app.route('/buy', methods=['GET', 'POST'])
 def book():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    q1 = 'SELECT * FROM stocks WHERE pavailability>0 '
+    q1 = 'SELECT * FROM stocks WHERE pavailability > 0 '
     cursor.execute(q1)
     pkg = cursor.fetchall()
     msg = ""
@@ -138,14 +138,16 @@ def book():
         book_id = cursor.fetchall()
         if len(book_id) >= 1:
             msg = "There is already a booking on this package."
+            q2 = 'UPDATE bookings SET numbooking = numbooking + 1 WHERE pid= %s AND cid = %s'
+            cursor.execute(q2, [pid, session['id']])
         else:
-            cursor.execute('INSERT INTO bookings VALUES (NULL,%s,%s)',(int(pid), int(session['id'])))
+            cursor.execute('INSERT INTO bookings VALUES (NULL,%s,%s,1)',(int(pid), int(session['id'])))
             mysql.connection.commit()
-            q1 = 'SELECT bookingid FROM bookings WHERE pid= %s AND cid = %s ORDER BY bookingid DESC'
-            cursor.execute(q1, (pid, session['id']))
-            book_id = cursor.fetchone()
-            cursor.execute('UPDATE stocks SET pavailability= stocks.pavailability-1 WHERE pid=%s', (pid,))
-            mysql.connection.commit()
+        q1 = 'SELECT bookingid FROM bookings WHERE pid= %s AND cid = %s ORDER BY bookingid DESC'
+        cursor.execute(q1, (pid, session['id']))
+        book_id = cursor.fetchone()
+        cursor.execute('UPDATE stocks SET pavailability= stocks.pavailability-1 WHERE pid=%s', (pid,))
+        mysql.connection.commit()
     return render_template('buy.html', available=available, pk=book_id, msg=msg)
 
 
