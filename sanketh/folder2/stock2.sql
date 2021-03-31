@@ -91,3 +91,7 @@ INSERT INTO transport values(119,"GG Travels","Bengaluru","Mysore",3,900,"road")
 INSERT INTO packages values(327,911,778,23000,"luxury",1,"3 days");
 INSERT INTO packages values(328,121,778,25000,"luxury",10,"5 days");
 -- INSERT INTO bookings values(327,123);
+
+
+                        <!-- <a href="{{ url_for('buy') }}" class="btn btn-primary">Buy</a> -->
+                        <!-- <a href="{{ url_for('sell') }}" class="btn btn-primary">View/Sell</a> -->

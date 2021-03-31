@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS hotels(
     PRIMARY KEY(hid)
 );
 
-CREATE TABLE IF NOT EXISTS packages(
+CREATE TABLE IF NOT EXISTS stocks(
     pid int(4) NOT NULL AUTO_INCREMENT,
     hid int(4) NOT NULL,
     pcost BIGINT(10) NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS bookings(
     pid int(4) NOT NULL,
     cid int(4) NOT NULL,
     PRIMARY KEY(bookingid),
-    FOREIGN KEY(pid) REFERENCES packages(pid),
+    FOREIGN KEY(pid) REFERENCES stocks(pid),
     FOREIGN KEY(cid) REFERENCES customer(cid)
 );
 
@@ -62,5 +62,6 @@ CREATE TABLE IF NOT EXISTS bookings(
     INSERT INTO hotels values(778," Google",8000,"Technology");
     INSERT INTO hotels values(411,"Tesla",750,"Automobiles");
     INSERT INTO hotels values(328,"Microsoft",5000,"Technology");
-    INSERT INTO packages values(327, 778, 8000, "Technology", 1);
-    INSERT INTO packages values(328, 778, 8000, "Technology", 10);
+    INSERT INTO stocks values(327, 778, 8000, "Technology", 1);
+    INSERT INTO stocks values(328, 778, 8000, "Technology", 10);
+    INSERT INTO stocks values(389, 328, 44, "Technology", 7);

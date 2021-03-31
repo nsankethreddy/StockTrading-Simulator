@@ -89,7 +89,7 @@ def logout():
 
 
 @app.route('/sell', methods=['GET', 'POST'])
-def viewbook():
+def sell():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     q1 = 'SELECT * FROM bookings WHERE cid = %s'
     cursor.execute(q1, [session['id']])
@@ -108,20 +108,20 @@ def viewbook():
         print(pid)
         if pid != None:
             cursor.execute(
-                'UPDATE packages SET pavailability= packages.pavailability+1 WHERE pid = %s', (pid['pid'],))
+                'UPDATE stocks SET pavailability= stocks.pavailability+1 WHERE pid = %s', (pid['pid'],))
             mysql.connection.commit()
             cursor.execute('DELETE FROM bookings WHERE bookingid=%s', (bid,))
             mysql.connection.commit()
             msg = "Successfully sold"
         else:
             msg = "Some error occured, please try again"
-    return render_template('viewbook.html', msg=session['username'], bookings=done, mesg=msg)
+    return render_template('sell.html', msg=session['username'], bookings=done, mesg=msg)
 
 
 @app.route('/buy', methods=['GET', 'POST'])
 def book():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    q1 = 'SELECT * FROM packages WHERE pavailability>0 '
+    q1 = 'SELECT * FROM stocks WHERE pavailability>0 '
     cursor.execute(q1)
     pkg = cursor.fetchall()
     msg = ""
@@ -136,7 +136,6 @@ def book():
         q1 = 'SELECT bookingid FROM bookings WHERE pid= %s AND cid = %s'
         cursor.execute(q1, [pid, session['id']])
         book_id = cursor.fetchall()
-        # print(book_id)
         if len(book_id) >= 1:
             msg = "There is already a booking on this package."
         else:
@@ -145,10 +144,9 @@ def book():
             q1 = 'SELECT bookingid FROM bookings WHERE pid= %s AND cid = %s ORDER BY bookingid DESC'
             cursor.execute(q1, (pid, session['id']))
             book_id = cursor.fetchone()
-            # print(book_id)
-            cursor.execute('UPDATE packages SET pavailability= packages.pavailability-1 WHERE pid=%s', (pid,))
+            cursor.execute('UPDATE stocks SET pavailability= stocks.pavailability-1 WHERE pid=%s', (pid,))
             mysql.connection.commit()
-    return render_template('book.html', available=available, pk=book_id, msg=msg)
+    return render_template('buy.html', available=available, pk=book_id, msg=msg)
 
 
 @app.route('/profile')
