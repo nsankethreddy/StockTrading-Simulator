@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>Buy Stocks Page</h2>
-<div>
+<div id='content'>
     <p>Available stocks:</p>
     <form action="" method="POST">
         <table>
@@ -26,7 +26,8 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><button type="submit" name="buy" class="btn btn-outline-success" value=" {{ value['sid'] }}">Buy</button></td>
+                <td><button type="submit" name="buy" class="btn btn-outline-success"
+                        value=" {{ value['sid'] }}">Buy</button></td>
             </tr>
             {% endfor %}
         </table>
@@ -35,6 +36,21 @@
     <br><br>
     <p> {{ msg }} </p>
     <p> Your booking ID : {{ pk['bookingid'] }}</p>
-
 </div>
+<script>
+
+
+    $.ajax({
+        url: "/buy",
+        type: "GET",
+        success: function (response) {
+            $("#content").html(response);
+            console.log("heloooooooooooo");
+        },
+        error: function (xhr) {
+            //Do Something to handle error
+        }
+    });
+
+</script>
 {% endblock %}
