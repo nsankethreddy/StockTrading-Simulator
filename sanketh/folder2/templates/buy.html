@@ -10,10 +10,11 @@
         <table>
             <tr>
                 <td><b>#</b></td>
-                <td><b>ID</b></td>
+                <td><b>Stock ID</b></td>
+                <td><b>Company ID</b></td>
                 <td><b>Company</b></td>
-                <td><b>Cost</b></td>
                 <td><b>Company type</b></td>
+                <td><b>Cost</b></td>
                 <td><b>Remaing Stocks</b></td>
             </tr>
             {% for key,value in available.items() %}
@@ -26,9 +27,9 @@
                 <td></td>
                 <td></td>
                 <td><button type="submit" name="book" class="btn btn-outline-success" value=" {{ value['pid'] }}">Buy</button></td>
-                {% endfor %}
 
             </tr>
+            {% endfor %}
         </table>
 
     </form>

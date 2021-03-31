@@ -91,7 +91,7 @@ def logout():
 @app.route('/sell', methods=['GET', 'POST'])
 def sell():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    q1 = 'SELECT * FROM bookings WHERE cid = %s'
+    q1 = 'select bookings.bookingid,company.hid,company.hname ,company.hid ,company.hcost ,company.hcategory ,stocks.pid from bookings left join company on company.hid=bookings.pid left join stocks on company.hid=stocks.hid where bookings.cid = %s'
     cursor.execute(q1, [session['id']])
     bookings = cursor.fetchall()
     done = dict()
@@ -121,7 +121,7 @@ def sell():
 @app.route('/buy', methods=['GET', 'POST'])
 def book():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    q1 = 'SELECT * FROM stocks WHERE pavailability > 0 '
+    q1 = 'select stocks.pid,company.hid,company.hname,company.hcategory,company.hcost,stocks.pavailability from company left join stocks on company.hid=stocks.hid where stocks.pavailability>0;'
     cursor.execute(q1)
     pkg = cursor.fetchall()
     msg = ""
