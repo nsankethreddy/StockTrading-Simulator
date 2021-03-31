@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h2>Bookings Page</h2>
+<div>
+    <p>Available packages:</p>
+    <form action="" method="POST">
+        <table>
+            <tr>
+                <td><b>Package</b></td>
+                <td><b>Details</b></td>
+            </tr>
+            {% for key,value in available.items() %}
+
+            <tr>
+                <td>{{ key }}</td>
+                {% for k,v in value.items() %}
+                <td>{{ v }}</td>
+                {% endfor %}
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button type="submit" name="book" class="btn btn-outline-success"
+                        value=" {{ value['pid'] }}">Buy</button></td>
+
+                {% endfor %}
+
+            </tr>
+        </table>
+
+    </form>
+    <br><br>
+    <p> {{ msg }} </p>
+    <p> Your booking ID : {{ pk['bookingid'] }}</p>
+
+</div>
+{% endblock %}

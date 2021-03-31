@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h2>Bookings Page</h2>
+<div>
+    <p>{{ msg }} booking details are below:</p>
+    <form action="" method="POST">
+        <table>
+
+            {% for key,value in bookings.items() %}
+
+            <tr>
+                <td>{{ key }}</td>
+                {% for k,v in value.items() %}
+                <td>{{ v }}</td>
+                {% endfor %}
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button type="submit" name="cancel" class="btn btn-outline-danger"
+                        value="{{  value['bookingid']  }}">Sell</button></td>
+
+                {% endfor %}
+
+            </tr>
+
+        </table>
+    </form>
+    <p> {{ mesg }}</p>
+
+</div>
+{% endblock %}
