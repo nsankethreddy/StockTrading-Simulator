@@ -133,16 +133,8 @@ def book():
         i = i + 1
     if request.method == 'POST':
         pid = request.form['book']
-        q1 = 'SELECT bookingid FROM bookings WHERE pid= %s AND cid = %s'
-        cursor.execute(q1, [pid, session['id']])
-        book_id = cursor.fetchall()
-        if len(book_id) >= 1:
-            msg = "There is already a booking on this package."
-            q2 = 'UPDATE bookings SET numbooking = numbooking + 1 WHERE pid= %s AND cid = %s'
-            cursor.execute(q2, [pid, session['id']])
-        else:
-            cursor.execute('INSERT INTO bookings VALUES (NULL,%s,%s,1)',(int(pid), int(session['id'])))
-            mysql.connection.commit()
+        cursor.execute('INSERT INTO bookings VALUES (NULL,%s,%s)',(int(pid), int(session['id'])))
+        mysql.connection.commit()
         q1 = 'SELECT bookingid FROM bookings WHERE pid= %s AND cid = %s ORDER BY bookingid DESC'
         cursor.execute(q1, (pid, session['id']))
         book_id = cursor.fetchone()
