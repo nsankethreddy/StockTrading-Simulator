@@ -16,37 +16,38 @@ CREATE TABLE IF NOT EXISTS logincheck(
     FOREIGN KEY(cid) REFERENCES customer(cid)
 );
 CREATE TABLE IF NOT EXISTS company(
-    hid int(4) NOT NULL AUTO_INCREMENT,
-    hname varchar(30) NOT NULL,
-    hcost BIGINT(10) NOT NULL,
-    hcategory varchar(30) NOT NULL,
+    comid int(4) NOT NULL AUTO_INCREMENT,
+    comname varchar(30) NOT NULL,
+    comcost BIGINT(10) NOT NULL,
+    comcategory varchar(30) NOT NULL,
     PRIMARY KEY(hid)
 );
 
 CREATE TABLE IF NOT EXISTS stocks(
-    pid int(4) NOT NULL AUTO_INCREMENT,
-    hid int(4) NOT NULL,
-    pcost BIGINT(10) NOT NULL,
-    hcategory varchar(30) NOT NULL,
-    pavailability int NOT NULL,
+    sid int(4) NOT NULL AUTO_INCREMENT,
+    comid int(4) NOT NULL,
+    availability int NOT NULL,
     PRIMARY KEY(pid),
     FOREIGN KEY(hid) REFERENCES company(hid)
 );
 
 CREATE TABLE IF NOT EXISTS bookings(
     bookingid int(4) NOT NULL AUTO_INCREMENT,
-    pid int(4) NOT NULL,
+    sid int(4) NOT NULL,
     cid int(4) NOT NULL,
     PRIMARY KEY(bookingid),
-    FOREIGN KEY(pid) REFERENCES stocks(pid),
+    FOREIGN KEY(sid) REFERENCES stock(sid),
     FOREIGN KEY(cid) REFERENCES customer(cid)
 );
 
-    INSERT INTO customer values(1,"skete",99,"99",'2000-08-26');
-    INSERT INTO logincheck values(1,"99");
-    INSERT INTO company values(778," Google",8000,"Technology");
-    INSERT INTO company values(411,"Tesla",750,"Automobiles");
-    INSERT INTO company values(328,"Microsoft",5000,"Technology");
-    INSERT INTO stocks values(327, 778, 8000, "Technology", 1);
-    INSERT INTO stocks values(328, 778, 8000, "Technology", 10);
-    INSERT INTO stocks values(389, 328, 44, "Technology", 7);
+
+INSERT INTO customer values(1,"skete",99,"99",'2000-08-26');
+INSERT INTO logincheck values(1,"99");
+
+INSERT INTO company values(11," Google",8000,"Technology");
+INSERT INTO company values(21,"Tesla",7500,"Automobiles");
+INSERT INTO company values(31,"Microsoft",5000,"Technology");
+
+INSERT INTO stocks values(1, 1, 1);
+INSERT INTO stocks values(2, 2, 10);
+INSERT INTO stocks values(3, 3, 7);
