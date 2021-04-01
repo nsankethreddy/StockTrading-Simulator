@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" http-equiv="refresh" content="0.5">
+    <title>{% block title %}Layout{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body class="loggedin" id='content'>
+    <nav class="navtop">
+        <div>
+            <h1>Stock Trader</h1>
+            <a href="{{ url_for('home') }}"><i class="fas fa-home"></i>Home</a>
+            <a href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i>Profile</a>
+            <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </div>
+    </nav>
+    <div class="content">
+        {% block content %}{% endblock %}
+        <div style="display: flex;  flex-direction: row; padding: 20px; justify-content: space-around; width: 70%;">
+            <div class="card" style="width: 18rem;">
+                <img class=" card-img-top" src="{{url_for('static', filename='pic1.jpg')}}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Stocks</h5>
+                    <p class="card-text">Browse through various exising stocks.</p>
+                    <a href="buy" class="btn btn-primary">Buy</a>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class=" card-img-top" src="{{url_for('static', filename='pic2.jpg')}}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Portfolio</h5>
+                    <p class="card-text">Dashboard of current portfolio, View or sell these stocks.</p>
+                    <a href="sell" class="btn btn-primary">Sell</a>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class=" card-img-top" src="{{url_for('static', filename='transactions_image.jpeg')}}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">History</h5>
+                    <p class="card-text">List of all transactions.</p>
+                    <a href="view" class="btn btn-primary">View</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+</body>
+
+</html>

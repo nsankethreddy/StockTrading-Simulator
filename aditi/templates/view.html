@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h2>History Page</h2>
+<div>
+    <p>{{ msg }} Transactions details are below:</p>
+    <form action="" method="POST">
+        <table>
+            <td><b>#</b></td>
+            <td><b>Type</b></td>
+            <td><b>Company</b></td>
+            <td><b>Stock ID</b></td>
+            <td><b>Cost</b></td>
+            <td><b>Timestamp</b></td>
+            {% for t in transactions %}
+            <tr>
+                {% for x in t.items() %}
+                <td>{{ x[1] }}</td>
+                {% endfor %}
+                <td></td>
+                <td></td>
+                <td></td>
+            {% endfor %}
+            </tr>
+        </table>
+    </form>
+
+</div>
+{% endblock %}
