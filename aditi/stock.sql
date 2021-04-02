@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS customer(
     pno BIGINT(10) NOT NULL,
     addr varchar(100) NOT NUll,
     dob DATE NOT NULL,
+    balance DOUBLE NOT NULL DEFAULT 5000.0,
     PRIMARY KEY(cid)
 );
 CREATE TABLE IF NOT EXISTS logincheck(

@@ -43,6 +43,8 @@ def register():
             cid = cursor.fetchone()
             cursor.execute('INSERT INTO logincheck VALUES (%s,%s)',(cid['cid'], password))
             mysql.connection.commit()
+            cursor.execute('INSERT INTO balance values(%s,0);',(username,))
+            mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
@@ -94,6 +96,7 @@ def profile():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM customer WHERE cid = %s',(session['id'],))
         account = cursor.fetchone()
+        mysql.connection.commit()
         return render_template('profile.html', account=account)
     return redirect(url_for('login'))
 
@@ -115,6 +118,7 @@ def book():
     available = dict()
     book_id = ""
     i = 1
+    flag=1
     for items in pkg:
         available[i] = items
         i = i + 1
@@ -125,16 +129,29 @@ def book():
         q1 = 'SELECT bookingid FROM bookings WHERE sid= %s AND cid = %s ORDER BY bookingid DESC'
         cursor.execute(q1, (sid, session['id']))
         book_id = cursor.fetchone()
-        print(book_id)
-        cursor.execute('UPDATE stock SET availability= stock.availability - 1 WHERE sid=%s', (sid,))
         mysql.connection.commit()
         cursor.execute('select cost from company,stock where company.comid=stock.comid and stock.sid=%s;',(sid,))
         cost = cursor.fetchone()
         mysql.connection.commit()
-        cursor.execute('INSERT INTO transactions VALUES(%s,"Buy",%s,NOW(),"aditi",%s);',(book_id['bookingid'],cost['cost'],sid,))
-        mysql.connection.commit()
-    return render_template('buy.html', available=available, pk=book_id, msg=msg)
 
+        cursor.execute('select balance from customer where cname=%s;',(session['username'],)) 
+        curr_balance = cursor.fetchone()['balance']
+        mysql.connection.commit()
+        
+        if curr_balance >= cost['cost']:
+            cursor.execute('UPDATE stock SET availability= stock.availability - 1 WHERE sid=%s', (sid,))
+            mysql.connection.commit()
+            cursor.execute('INSERT INTO transactions VALUES(%s,"Buy",%s,NOW(),"aditi",%s);',(book_id['bookingid'],cost['cost'],sid,))
+            mysql.connection.commit()
+            cursor.execute('update customer set balance=balance-%s where cname=%s;',(cost['cost'],session['username'],))
+            mysql.connection.commit()
+            flag=1
+
+        else:
+            print("balance too low!")
+            flag=0
+    
+    return render_template('buy.html', available=available, pk=book_id, msg=msg,show_results=flag)
 
 @app.route('/sell', methods=['GET', 'POST'])
 def sell():
@@ -158,6 +175,8 @@ def sell():
         cursor.execute('select distinct company.cost from company,stock,bookings where company.comid=stock.comid and stock.sid=%s;',(sid['sid'],))
         cost = cursor.fetchone()
         print("cost", cost)
+        mysql.connection.commit()
+        cursor.execute('update customer set balance=balance+%s where cname=%s;',(cost['cost'],session['username']))
         mysql.connection.commit()
 
         if sid != None:
@@ -183,11 +202,37 @@ def view():
 
     return render_template('view.html',transactions=transactions)
 
+#query - group stocks by company, for current user
 
-#separate function and page for this
-#handle - /view_groups
-#query - group stocks by company
-#group stocks by date
+@app.route('/transactions',methods=['GET','POST'])
+def groupedTransactions():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT comname from company;')
+    companies = [x['comname'] for x in cursor.fetchall()]
+    mysql.connection.commit()
+
+    company=""
+    selected_transactions = tuple()
+    if request.method == 'POST':
+        company = request.form['company']
+    
+        cursor.execute('SELECT id,type,company.comname,transactions.sid,amount,date FROM transactions,company,stock where username=%s and stock.sid=transactions.sid and stock.comid=company.comid and company.comname=%s order by date desc;',(session['username'],company,))
+        selected_transactions = cursor.fetchall()
+        mysql.connection.commit()
+        #not working
+        companyTransactions(company,selected_transactions)
+
+        #return render_template('company.html',company=company,transactions=selected_transactions)
+
+    return render_template('transactions.html',companies=companies,transactions=selected_transactions)
+
+#dummy function till now!
+#will work on it
+"""
+@app.route('/company',methods=['POST'])
+def companyTransactions(company,selected_transactions):
+    return render_template('company.html',company=company,transactions=selected_transactions)
+"""
 
 if __name__ == "__main__":
     app.run(port=5050, debug=1)
