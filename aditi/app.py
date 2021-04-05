@@ -205,9 +205,6 @@ def view():
 
 #query - group stocks by company, for current user
 
-"""
-{'id': 74, 'type': 'Buy', 'comname': 'Microsoft', 'sid': 6, 'amount': 5000.0, 'date': datetime.datetime(2021, 4, 1, 18, 9, 14)}
-"""
 @app.route('/transactions',methods=['GET','POST'])
 def groupedTransactions():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
