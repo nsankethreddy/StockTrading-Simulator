@@ -5,6 +5,7 @@ import MySQLdb.cursors
 import re
 import string
 import random
+import time
 
 app = Flask(__name__)
 
@@ -204,6 +205,9 @@ def view():
 
 #query - group stocks by company, for current user
 
+"""
+{'id': 74, 'type': 'Buy', 'comname': 'Microsoft', 'sid': 6, 'amount': 5000.0, 'date': datetime.datetime(2021, 4, 1, 18, 9, 14)}
+"""
 @app.route('/transactions',methods=['GET','POST'])
 def groupedTransactions():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -211,28 +215,40 @@ def groupedTransactions():
     companies = [x['comname'] for x in cursor.fetchall()]
     mysql.connection.commit()
 
-    company=""
     selected_transactions = tuple()
-    if request.method == 'POST':
-        company = request.form['company']
+    trans_colour = dict()
+    colours = dict()
+    i=0
+    summary = dict()
+
+    sample_colours = ['blue','green']
+
+    for c in companies:
+        trans_colour[c] = []
+        colours[c] = sample_colours[i%2]
+        i=i+1
+        summary[c] = dict()
+        summary[c] = {'Buy': 0,'Sell': 0,'Net': 0}
     
-        cursor.execute('SELECT id,type,company.comname,transactions.sid,amount,date FROM transactions,company,stock where username=%s and stock.sid=transactions.sid and stock.comid=company.comid and company.comname=%s order by date desc;',(session['username'],company,))
-        selected_transactions = cursor.fetchall()
-        mysql.connection.commit()
-        #not working
-        companyTransactions(company,selected_transactions)
+    if request.method == 'GET':
+    
+        for company in companies:
+            cursor.execute('SELECT id,type,company.comname,transactions.sid,amount,date FROM transactions,company,stock where username=%s and stock.sid=transactions.sid and stock.comid=company.comid and company.comname=%s order by date desc;',(session['username'],company,))
+            selected_transactions = cursor.fetchall()
+            mysql.connection.commit()
+        
+            for st in selected_transactions:
+                trans_colour[st['comname']].append(st)
 
-        #return render_template('company.html',company=company,transactions=selected_transactions)
 
-    return render_template('transactions.html',companies=companies,transactions=selected_transactions)
+            cursor.execute('SELECT type,sum(amount) FROM transactions,company,stock where stock.sid=transactions.sid and stock.comid=company.comid and username=%s and company.comname=%s group by type;',(session['username'],company,))
+            temp = cursor.fetchall()
+            summary[company][temp[0]['type']] = temp[0]['sum(amount)']
+            summary[company][temp[1]['type']] = temp[1]['sum(amount)']
+            summary[company]['Net'] = -summary[company]['Buy'] + summary[company]['Sell']
+            mysql.connection.commit()
 
-#dummy function till now!
-#will work on it
-"""
-@app.route('/company',methods=['POST'])
-def companyTransactions(company,selected_transactions):
-    return render_template('company.html',company=company,transactions=selected_transactions)
-"""
+    return render_template('transactions.html',companies=companies,transactions=trans_colour,colours=colours,summary=summary)
 
 if __name__ == "__main__":
     app.run(port=5050, debug=1)

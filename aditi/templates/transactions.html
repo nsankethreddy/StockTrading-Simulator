@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h2>Company-wise Transactions</h2>
+<div>
+    <form action="" method="POST">
+         {% for c in companies %}
+         <h3>{{ c }}</h3>
+            <table>
+                <div class="card" style="width: 18rem;float:right;">
+                <div class="card-body">
+                    <h5 class="card-title">Summary</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Buy amount: {{ summary[c]['Buy']  }}</li>
+                        <li class="list-group-item">Sell amount: {{ summary[c]['Sell']  }}</li>
+                        <li class="list-group-item">Net amount: {{ summary[c]['Net']  }}</li>
+                    </ul>
+                </div>
+                </div>
+                <td><b>#</b></td>
+                <td><b>Type</b></td>
+                <td><b>Stock ID</b></td>
+                <td><b>Cost</b></td>
+                <td><b>Timestamp</b></td>
+                <tr>
+                {% for y in transactions[c] %}
+                    <td style="color: {{colours[c]}}">{{ y['id'] }}</td>
+                    <td style="color: {{colours[c]}}">{{ y['type'] }}</td>
+                    <td style="color: {{colours[c]}}">{{ y['sid'] }}</td>
+                    <td style="color: {{colours[c]}}">{{ y['amount'] }}</td>
+                    <td style="color: {{colours[c]}}">{{ y['date'] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <hr>
+            {% endfor %}
+    </form>
+
+</div>
+{% endblock %}
