@@ -5,6 +5,8 @@ import MySQLdb.cursors
 import re
 import string
 import random
+import time
+import threading
 
 app = Flask(__name__)
 
@@ -161,4 +163,21 @@ def sell():
 
 
 if __name__ == "__main__":
+    def thread_function():
+        while(1):
+            with app.app_context():
+                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                n = random.randint(-10,10)
+                if(n>0):
+                    s = str(n)
+                    cursor.execute('UPDATE company SET cost = cost + %s',[s])
+                else:
+                    s = str(n*(-1))
+                    cursor.execute('UPDATE company SET cost = cost - %s',[s])
+                mysql.connection.commit()
+                time.sleep(1)
+
+    x = threading.Thread(target=thread_function, args=())
+    x.start()
+
     app.run(port=5050, debug=1)
