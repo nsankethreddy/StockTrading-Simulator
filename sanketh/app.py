@@ -28,11 +28,8 @@ def register():
         username = request.form['username']
         phone = request.form['phone']
         dob = request.form['dob']
-        print(dob)
         today = date.today()
-        print(int(dob[0:4]))
         age = today.year - int(dob[0:4]) - ((today.month, today.day) <  (int(dob[6:7]), int(dob[9:10])))
-        print("Age =", age)
         address = request.form['address']
         password = request.form['password']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -56,7 +53,6 @@ def register():
             cursor.execute('INSERT INTO logincheck VALUES (%s,%s)',(cid['cid'], password))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
-
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
     elif request.method == 'GET':
