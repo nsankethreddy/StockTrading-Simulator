@@ -142,7 +142,7 @@ def book():
         if curr_balance >= cost['cost']:
             cursor.execute('UPDATE stock SET availability= stock.availability - 1 WHERE sid=%s', (sid,))
             mysql.connection.commit()
-            cursor.execute('INSERT INTO transactions VALUES(%s,"Buy",%s,NOW(),"aditi",%s);',(book_id['bookingid'],cost['cost'],sid,))
+            cursor.execute('INSERT INTO transactions VALUES(%s,"Buy",%s,NOW(),%s,%s);',(book_id['bookingid'],cost['cost'],session['username'],sid,))
             mysql.connection.commit()
             cursor.execute('update customer set balance=balance-%s where cname=%s;',(cost['cost'],session['username'],))
             mysql.connection.commit()
@@ -225,8 +225,8 @@ def groupedTransactions():
         colours[c] = sample_colours[i%2]
         i=i+1
         summary[c] = dict()
-        summary[c] = {'Buy': 0,'Sell': 0,'Net': 0}
-    
+        summary[c] = {'Buy': 0,'Sell': 0,'Net': 0,'Bought': 0,'Sold': 0}
+
     if request.method == 'GET':
     
         for company in companies:
@@ -238,11 +238,13 @@ def groupedTransactions():
                 trans_colour[st['comname']].append(st)
 
 
-            cursor.execute('SELECT type,sum(amount) FROM transactions,company,stock where stock.sid=transactions.sid and stock.comid=company.comid and username=%s and company.comname=%s group by type;',(session['username'],company,))
+            cursor.execute('SELECT type,sum(amount),count(*) FROM transactions,company,stock where stock.sid=transactions.sid and stock.comid=company.comid and username=%s and company.comname=%s group by type;',(session['username'],company,))
             temp = cursor.fetchall()
             summary[company][temp[0]['type']] = temp[0]['sum(amount)']
             summary[company][temp[1]['type']] = temp[1]['sum(amount)']
             summary[company]['Net'] = -summary[company]['Buy'] + summary[company]['Sell']
+            summary[company]['Bought'] = temp[0]['count(*)']
+            summary[company]['Sold'] = temp[1]['count(*)']
             mysql.connection.commit()
 
     return render_template('transactions.html',companies=companies,transactions=trans_colour,colours=colours,summary=summary)
