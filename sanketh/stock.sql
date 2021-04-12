@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS bookings(
 );
 
 
-INSERT INTO customer values(1,"skete",99,"99",'2000-08-26');
+INSERT INTO customer values(1,"skete",9987543957,"99",'2000-08-26');
 INSERT INTO logincheck values(1,"99");
 
 INSERT INTO company values(11," Google",8000,"Technology");
