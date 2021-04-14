@@ -7,6 +7,7 @@ import string
 import random
 import time
 import threading
+from datetime import date
 
 app = Flask(__name__)
 
@@ -27,6 +28,8 @@ def register():
         username = request.form['username']
         phone = request.form['phone']
         dob = request.form['dob']
+        today = date.today()
+        age = today.year - int(dob[0:4]) - ((today.month, today.day) <  (int(dob[6:7]), int(dob[9:10])))
         address = request.form['address']
         password = request.form['password']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -34,9 +37,13 @@ def register():
         cursor.execute(q1, [username])
         account = cursor.fetchone()
         if account:
-            msg = 'Account already exists!'
+            msg = 'Account already exists for this username!'
         elif not re.match(r'[A-Za-z0-9]+', username):
             msg = 'Username must contain only characters and numbers!'
+        elif not re.match(r'^[2-9]{1}[0-9]{9}$',phone):
+            msg = 'Phone Number format is wrong'
+        elif (age<18):
+            msg = 'You are not old enough to register!'
         elif not username or not password:
             msg = 'Please fill out the form!'
         else:
