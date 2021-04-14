@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS bookings(
 
 create table if not exists transactions(id int primary key, type varchar(5), company varchar(25), amount double,date timestamp);
 
-INSERT INTO customer values(1,"skete",99,"99",'2000-08-26');
+INSERT INTO customer values(1,"skete",99,"99",'2000-08-26',50000);
 INSERT INTO logincheck values(1,"99");
 
 INSERT INTO company values(11," Google",8000,"Technology");
