@@ -6,6 +6,7 @@ import re
 import string
 import random
 import time
+import threading
 
 app = Flask(__name__)
 
@@ -39,7 +40,7 @@ def register():
         elif not username or not password:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO customer VALUES (NULL, %s, %s, %s,%s)',(username, phone, address, dob))
+            cursor.execute('INSERT INTO customer VALUES (5000.0, %s, %s, %s,%s)',(username, phone, address, dob))
             cursor.execute(q1, [username])
             cid = cursor.fetchone()
             cursor.execute('INSERT INTO logincheck VALUES (%s,%s)',(cid['cid'], password))
@@ -138,7 +139,6 @@ def book():
         cursor.execute('select balance from customer where cname=%s;',(session['username'],)) 
         curr_balance = cursor.fetchone()['balance']
         mysql.connection.commit()
-        
         if curr_balance >= cost['cost']:
             cursor.execute('UPDATE stock SET availability= stock.availability - 1 WHERE sid=%s', (sid,))
             mysql.connection.commit()
@@ -151,7 +151,6 @@ def book():
         else:
             print("balance too low!")
             flag=0
-    
     return render_template('buy.html', available=available, pk=book_id, msg=msg,show_results=flag)
 
 @app.route('/sell', methods=['GET', 'POST'])
@@ -228,12 +227,10 @@ def groupedTransactions():
         summary[c] = {'Buy': 0,'Sell': 0,'Net': 0,'Bought': 0,'Sold': 0}
 
     if request.method == 'GET':
-    
         for company in companies:
             cursor.execute('SELECT id,type,company.comname,transactions.sid,amount,date FROM transactions,company,stock where username=%s and stock.sid=transactions.sid and stock.comid=company.comid and company.comname=%s order by date desc;',(session['username'],company,))
             selected_transactions = cursor.fetchall()
             mysql.connection.commit()
-        
             for st in selected_transactions:
                 trans_colour[st['comname']].append(st)
 
@@ -250,4 +247,21 @@ def groupedTransactions():
     return render_template('transactions.html',companies=companies,transactions=trans_colour,colours=colours,summary=summary)
 
 if __name__ == "__main__":
+    def thread_function():
+        while(1):
+            with app.app_context():
+                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                n = random.randint(-10,10)
+                if(n>0):
+                    s = str(n)
+                    cursor.execute('UPDATE company SET cost = cost + %s',[s])
+                else:
+                    s = str(n*(-1))
+                    cursor.execute('UPDATE company SET cost = cost - %s',[s])
+                mysql.connection.commit()
+                time.sleep(1)
+
+    x = threading.Thread(target=thread_function, args=())
+    x.start()
+
     app.run(port=5050, debug=1)
