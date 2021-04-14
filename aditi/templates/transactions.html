@@ -7,9 +7,10 @@
 <div>
     <form action="" method="POST">
          {% for c in companies %}
+         {% if summary[c]['Buy'] > 0 or summary[c]['Sell'] > 0 %}
          <h3>{{ c }}</h3>
-            <table>
-                <div class="card" style="width: 18rem;float:right;">
+         <table>
+                <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">Summary</h5>
                     <ul class="list-group list-group-flush">
@@ -37,6 +38,8 @@
                 {% endfor %}
             </table>
             <hr>
+            {% endif %}
+
             {% endfor %}
     </form>
 

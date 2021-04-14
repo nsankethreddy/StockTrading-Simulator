@@ -240,15 +240,18 @@ def groupedTransactions():
             mysql.connection.commit()
             for st in selected_transactions:
                 trans_colour[st['comname']].append(st)
-
-
+            
             cursor.execute('SELECT type,sum(amount),count(*) FROM transactions,company,stock where stock.sid=transactions.sid and stock.comid=company.comid and username=%s and company.comname=%s group by type;',(session['username'],company,))
             temp = cursor.fetchall()
-            summary[company][temp[0]['type']] = temp[0]['sum(amount)']
-            summary[company][temp[1]['type']] = temp[1]['sum(amount)']
-            summary[company]['Net'] = -summary[company]['Buy'] + summary[company]['Sell']
-            summary[company]['Bought'] = temp[0]['count(*)']
-            summary[company]['Sold'] = temp[1]['count(*)']
+            if len(temp) != 0:
+                print(company,summary[company])
+                summary[company][temp[0]['type']] = temp[0]['sum(amount)']
+                if len(temp)>=2:
+                    summary[company][temp[1]['type']] = temp[1]['sum(amount)']
+                summary[company]['Net'] = -summary[company]['Buy'] + summary[company]['Sell']
+                summary[company]['Bought'] = temp[0]['count(*)']
+                if len(temp)>=2:
+                    summary[company]['Sold'] = temp[1]['count(*)']
             mysql.connection.commit()
 
     return render_template('transactions.html',companies=companies,transactions=trans_colour,colours=colours,summary=summary)

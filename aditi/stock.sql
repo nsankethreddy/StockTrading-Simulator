@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS bookings(
     FOREIGN KEY(cid) REFERENCES customer(cid)
 );
 
-create table if not exists transactions(id int , type varchar(5), amount double,date timestamp,username varchar(25), sid int);
+create table if not exists transactions(id int, type varchar(5), amount double,date timestamp,username varchar(25), sid int);
 
 INSERT INTO customer values(1,"skete",9886045531,"99",'2000-08-26',50000);
 INSERT INTO logincheck values(1,"99");
