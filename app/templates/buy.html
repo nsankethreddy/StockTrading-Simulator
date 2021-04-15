@@ -43,10 +43,11 @@
     <p> Your booking ID : {{ pk['bookingid'] }}</p>
 </div>
 {% else %}
-<h4> Your account balance is low! </h4>
+    <script>
+        alert('Your account balance is low! ')
+    </script>
 
 {% endif %}
-
 
 {% endblock %}
 
