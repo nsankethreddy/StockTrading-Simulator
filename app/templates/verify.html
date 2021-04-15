@@ -17,7 +17,7 @@
                  </div>
                  <br>
                 <div class="buttons">
-                    <input class="btn btn-primary" type="submit" value="Login" onclick="checkPassword()" />
+                    <input class="btn btn-primary" type="reset" value="Login" onclick="checkPassword()" />
                 </div>
          </form>
          
@@ -25,11 +25,12 @@
       
        function checkPassword(){
        if(document.getElementById('password').value == $('#my-data').data().name) {
-        alert('Correct Password!'); 
-          window.location.href = "buy";
-         } else {
-         alert('Wrong Password!');
-          return false;
+             alert('Correct Password!');
+             window.location.href = 'buy';
+             return false;
+       } else {
+             alert('Wrong Password!');
+             return false; 
         }
        }
  </script>
