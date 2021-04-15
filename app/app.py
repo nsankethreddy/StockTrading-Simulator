@@ -32,6 +32,7 @@ def register():
         age = today.year - int(dob[0:4]) - ((today.month, today.day) <  (int(dob[6:7]), int(dob[9:10])))
         address = request.form['address']
         password = request.form['password']
+        card_pass = request.form['card_pass']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         q1 = 'SELECT cid FROM customer WHERE cname = %s'
         cursor.execute(q1, [username])
@@ -46,6 +47,8 @@ def register():
             msg = 'You are not old enough to register!'
         elif not username or not password:
             msg = 'Please fill out the form!'
+        elif len(card_pass)<6 or len(card_pass)>10:
+            msg = 'Card password length should be between 6 to 10 characters'
         else:
             cursor.execute('INSERT INTO customer VALUES (5000.0, %s, %s, %s,%s)',(username, phone, address, dob))
             cursor.execute(q1, [username])
@@ -199,6 +202,19 @@ def sell():
         else:
             msg = "Some error occured, please try again"
     return render_template('sell.html', msg=session['username'], bookings=done, mesg=msg)
+
+@app.route('/verify',methods=['GET','POST'])
+def verify():
+    password=""
+    if request.method=='POST':
+        card_details = request.form['pass']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT card_pass FROM customer WHERE cname=%s;',(session['username'],))
+        temp = cursor.fetchall()
+        password = temp[0]['card_pass']
+        mysql.connection.commit()
+        
+    return render_template('verify.html',name=password)
 
 @app.route('/view',methods=['GET'])
 def view():

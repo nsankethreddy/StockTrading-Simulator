@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS customer(
     addr varchar(100) NOT NUll,
     dob DATE NOT NULL,
     balance DOUBLE NOT NULL DEFAULT 5000.0,
+    card_pass varchar(10) NOT NULL,
     PRIMARY KEY(cid)
 );
 CREATE TABLE IF NOT EXISTS logincheck(
@@ -43,7 +44,7 @@ CREATE TABLE IF NOT EXISTS bookings(
 
 create table if not exists transactions(id int, type varchar(5), amount double,date timestamp,username varchar(25), sid int);
 
-INSERT INTO customer values(1,"skete",9886045531,"99",'2000-08-26',50000);
+INSERT INTO customer values(1,"skete",9886045531,"99",'2000-08-26',50000,"password");
 INSERT INTO logincheck values(1,"99");
 
 INSERT INTO company values(11," Google",8000,"Technology");

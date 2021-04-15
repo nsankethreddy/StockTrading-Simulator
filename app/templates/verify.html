@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}Verify{% endblock %}
+
+{% block content %}
+<head>
+    <meta id="my-data" data-name="{{name}}">
+</head>
+
+        <form method="POST" action="">
+               <h4>Enter your password to proceed</h4>
+
+               <h5>Password: </h5>
+
+                 <div class="inputcontent">
+                        <input type="password" name="pass" id="password" /><br />
+                 </div>
+                 <br>
+                <div class="buttons">
+                    <input class="btn btn-primary" type="submit" value="Login" onclick="checkPassword()" />
+                </div>
+         </form>
+         
+ <script>
+      
+       function checkPassword(){
+       if(document.getElementById('password').value == $('#my-data').data().name) {
+        alert('Correct Password!'); 
+          window.location.href = "buy";
+         } else {
+         alert('Wrong Password!');
+          return false;
+        }
+       }
+ </script>
+
+{% endblock %}
+
+
