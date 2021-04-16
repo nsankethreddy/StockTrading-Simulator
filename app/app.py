@@ -50,12 +50,10 @@ def register():
         elif len(card_pass)<6 or len(card_pass)>10:
             msg = 'Card password length should be between 6 to 10 characters'
         else:
-            cursor.execute('INSERT INTO customer VALUES (5000.0, %s, %s, %s,%s)',(username, phone, address, dob))
+            cursor.execute('INSERT INTO customer (balance,cname,pno,addr,dob,card_pass) VALUES (5000.0, %s, %s, %s,%s,%s)',(username, phone, address, dob,card_pass,))
             cursor.execute(q1, [username])
             cid = cursor.fetchone()
             cursor.execute('INSERT INTO logincheck VALUES (%s,%s)',(cid['cid'], password))
-            mysql.connection.commit()
-            cursor.execute('INSERT INTO balance values(%s,0);',(username,))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
