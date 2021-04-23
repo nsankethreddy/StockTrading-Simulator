@@ -1,2 +1,0 @@
-# Amazon
-Software Engineering project
