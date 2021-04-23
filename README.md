@@ -13,7 +13,7 @@ Project for OOAD-SE course in the sixth semester, PES University.
 ## To run: 
 1. `cd app`
 2. `pip3 install -r requirements.txt`
-3. `python3 app.py`
+3. `python3 app.py`  
 The app is now running on localhost:5050.  
 
 ### Change root password on local mysql server:
